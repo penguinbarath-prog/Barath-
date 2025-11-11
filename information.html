@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click to Pop Balloon</title>
+    <style>
+        /* Basic body styling for centering and background */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* Balloon styling */
+        .balloon {
+            width: 150px;
+            height: 200px;
+            background-color: #ff6347; /* Tomato Red */
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+            /* Animation for a little float effect (optional) */
+            animation: float 4s ease-in-out infinite alternate;
+        }
+
+        /* Balloon string (tail) */
+        .balloon::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -20px;
+            width: 2px;
+            height: 30px;
+            background-color: #333;
+            transform: translateX(-50%);
+        }
+
+        /* Balloon "pop" effect (disappear) */
+        .popped {
+            /* Scale down and fade out quickly */
+            transform: scale(0.01) !important; 
+            opacity: 0;
+        }
+
+        /* Optional floating animation */
+        @keyframes float {
+            0% { transform: translateY(0) rotate(2deg); }
+            100% { transform: translateY(-20px) rotate(-2deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="pop-sound" src="balloon.mp3" preload="auto"></audio>
+    
+    <div class="balloon" onclick="popBalloon(this)"></div>
+
+    <script>
+        // Get the audio element
+        const popSound = document.getElementById('pop-sound');
+
+        /**
+         * Function to "pop" the balloon when clicked.
+         * @param {HTMLElement} balloonElement - The balloon div that was clicked.
+         */
+        function popBalloon(balloonElement) {
+            // 1. Play the sound
+            // Reset the sound to the beginning to allow rapid clicks
+            popSound.currentTime = 0;
+            popSound.play();
+
+            // 2. Add the 'popped' class to visually pop the balloon
+            balloonElement.classList.add('popped');
+
+            // 3. Remove the balloon from the DOM after the transition is complete
+            // This waits for the 0.1s CSS transition
+            setTimeout(() => {
+                balloonElement.remove();
+            }, 100); 
+
+            // Optional: You could add a new balloon here to continue the fun.
+        }
+    </script>
+</body>
+</html>
